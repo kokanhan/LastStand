@@ -3,12 +3,14 @@
 #include "TheLastStandGameMode.h"
 #include "TheLastStandPlayerController.h"
 #include "TheLastStandCharacter.h"
+#include "MyPlayerState.h"
 #include "UObject/ConstructorHelpers.h"
 
 ATheLastStandGameMode::ATheLastStandGameMode()
 {
 	// use our custom PlayerController class
 	PlayerControllerClass = ATheLastStandPlayerController::StaticClass();
+	PlayerStateClass = AMyPlayerState::StaticClass();
 
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/TopDown/Blueprints/BP_TopDownCharacter"));
