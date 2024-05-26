@@ -13,6 +13,9 @@ class ATheLastStandGameMode : public AGameModeBase
 
 public:
 	ATheLastStandGameMode();
+
+public:
+	virtual void PostLogin(APlayerController* NewPlayer);
 };
 
 

@@ -17,4 +17,14 @@ class THELASTSTAND_API AMyPlayerState : public APlayerState
 	
 public: 
 	TArray<FItem> items;
+	
+public:
+	void initItemList();
+	TArray<FItem> getSynthesisList(int id);
+
+	UFUNCTION(BlueprintCallable)
+	bool sysnthesisItem(int id);
+
+	UFUNCTION(BlueprintCallable)
+	void printItem();
 };

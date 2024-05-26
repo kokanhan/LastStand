@@ -13,4 +13,6 @@ struct FItem
 	FString name;
 	UPROPERTY(BlueprintReadOnly)
 	FString type;
+	UPROPERTY(BlueprintReadOnly)
+	int count;
 };
