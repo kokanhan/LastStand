@@ -9,6 +9,7 @@
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
+#include "MyPlayerState.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 
@@ -16,7 +17,7 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 ATheLastStandPlayerController::ATheLastStandPlayerController()
 {
-	bShowMouseCursor = true;//为了在虚幻中获取鼠标（而不是像第一人称射击游戏那样让它为您控制）
+	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
 	CachedDestination = FVector::ZeroVector;
 	FollowTime = 0.f;
@@ -53,6 +54,8 @@ void ATheLastStandPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::OnTouchTriggered);
 		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::OnTouchReleased);
 		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Canceled, this, &ATheLastStandPlayerController::OnTouchReleased);
+
+		EnhancedInputComponent->BindAction(ESC, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::OnESCClicked);
 	}
 	else
 	{
@@ -122,4 +125,18 @@ void ATheLastStandPlayerController::OnTouchReleased()
 {
 	bIsTouch = false;
 	OnSetDestinationReleased();
+}
+
+void ATheLastStandPlayerController::OnESCClicked() 
+{
+	if (!isOnSynLayout)
+	{
+		Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showSynListLayout();
+	}
+	else 
+	{
+		Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->hideSynListLayout();
+	}
+
+	isOnSynLayout = !isOnSynLayout;
 }

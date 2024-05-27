@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
 #include "Item.h"
+#include "MyUserWidget.h"
 #include "MyPlayerState.generated.h"
 
 /**
@@ -17,4 +18,22 @@ class THELASTSTAND_API AMyPlayerState : public APlayerState
 	
 public: 
 	TArray<FItem> items;
+
+	UPROPERTY(BlueprintReadWrite)
+	UMyUserWidget* layout;
+
+public:
+	void initItemList();
+
+	UFUNCTION(BlueprintCallable)
+	int getSynListCount();
+
+	UFUNCTION(BlueprintCallable)
+	TArray<FItem> getSynthesisItemReceipt(int id);
+
+	UFUNCTION(BlueprintCallable)
+	bool synthesisItem(int id);
+
+	UFUNCTION(BlueprintCallable)
+	void printItem();
 };
