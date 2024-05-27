@@ -15,16 +15,19 @@ void AMyPlayerState::initItemList()
 	}
 }
 
-TArray<FItem> AMyPlayerState::getSynthesisList(int id) 
+int AMyPlayerState::getSynListCount()
 {
-	AMyGameStateBase* gameState = GetWorld()->GetGameState<AMyGameStateBase>();
-	
-	return gameState->synthesisList[id];
+	return GetWorld()->GetGameState<AMyGameStateBase>()->synthesisList.Num();
 }
 
-bool AMyPlayerState::sysnthesisItem(int id)
+TArray<FItem> AMyPlayerState::getSynthesisItemReceipt(int id)
 {
-	TArray<FItem> list = getSynthesisList(id);
+	return GetWorld()->GetGameState<AMyGameStateBase>()->synthesisList[id];
+}
+
+bool AMyPlayerState::synthesisItem(int id)
+{
+	TArray<FItem> list = getSynthesisItemReceipt(id);
 
 	for (int i = 1; i < list.Num(); i += 1) 
 	{

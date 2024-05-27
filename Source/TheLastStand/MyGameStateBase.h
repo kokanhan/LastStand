@@ -16,7 +16,7 @@ class THELASTSTAND_API AMyGameStateBase : public AGameStateBase
 	GENERATED_BODY()
 	
 public:
-	int itemTypeCount = 4;
+	int itemTypeCount = 22;
 	TArray<TArray<FItem>> synthesisList;
 
 	void initSynthesisList();
