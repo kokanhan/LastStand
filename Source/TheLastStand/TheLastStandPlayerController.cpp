@@ -16,7 +16,7 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 ATheLastStandPlayerController::ATheLastStandPlayerController()
 {
-	bShowMouseCursor = true;
+	bShowMouseCursor = true;//为了在虚幻中获取鼠标（而不是像第一人称射击游戏那样让它为您控制）
 	DefaultMouseCursor = EMouseCursor::Default;
 	CachedDestination = FVector::ZeroVector;
 	FollowTime = 0.f;
