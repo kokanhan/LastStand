@@ -114,3 +114,8 @@ FString UMyBlueprintFunctionLibrary::getItemName(int id)
 
 	return "unknowed item";
 }
+
+UTexture2D* UMyBlueprintFunctionLibrary::loadTexture(const FString& path)
+{
+	return Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL, *path));;
+}

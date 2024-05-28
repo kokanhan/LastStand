@@ -69,6 +69,7 @@ protected:
 private:
 	FVector CachedDestination;
 
+	bool isOnInventoryLayout;
 	bool isOnSynLayout;
 	bool bIsTouch; // Is it a touch device
 	float FollowTime; // For how long it has been pressed

@@ -17,6 +17,7 @@ class THELASTSTAND_API AMyPlayerState : public APlayerState
 	GENERATED_BODY()
 	
 public: 
+	UPROPERTY(BlueprintReadWrite)
 	TArray<FItem> items;
 
 	UPROPERTY(BlueprintReadWrite)

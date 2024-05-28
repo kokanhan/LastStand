@@ -132,16 +132,20 @@ void ATheLastStandPlayerController::OnTouchReleased()
 
 void ATheLastStandPlayerController::OnESCClicked() 
 {
-	if (!isOnSynLayout)
-	{
-		Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showSynListLayout();
-	}
-	else 
-	{
-		Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->hideSynListLayout();
-	}
+	//if (!isOnSynLayout)
+	//{
+	//	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showSynListLayout();
+	//}
+	//else 
+	//{
+	//	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->hideSynListLayout();
+	//}
 
-	isOnSynLayout = !isOnSynLayout;
+	//isOnSynLayout = !isOnSynLayout;
+	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->printItem();
+
+	isOnInventoryLayout = !isOnInventoryLayout;
+	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showInventoryLayout(isOnInventoryLayout);
 }
 
 void ATheLastStandPlayerController::pickUp()

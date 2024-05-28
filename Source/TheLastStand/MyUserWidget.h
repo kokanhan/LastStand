@@ -23,4 +23,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void drawSlotsInSynItem(const TArray<FVector>& pos);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void showInventoryLayout(bool isShow);
 };
