@@ -9,6 +9,8 @@
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
+#include "Kismet/GameplayStatics.h"
+#include "DestroyableObject.h"
 #include "MyPlayerState.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
@@ -56,6 +58,7 @@ void ATheLastStandPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Canceled, this, &ATheLastStandPlayerController::OnTouchReleased);
 
 		EnhancedInputComponent->BindAction(ESC, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::OnESCClicked);
+		EnhancedInputComponent->BindAction(rightButton, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::pickUp);
 	}
 	else
 	{
@@ -139,4 +142,16 @@ void ATheLastStandPlayerController::OnESCClicked()
 	}
 
 	isOnSynLayout = !isOnSynLayout;
+}
+
+void ATheLastStandPlayerController::pickUp()
+{
+	FHitResult hit(ForceInit);
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
+
+	if (Cast<ADestroyableObject>(hit.GetActor()) != NULL)
+	{
+		ADestroyableObject* cur = Cast<ADestroyableObject>(hit.GetActor());
+		cur->dropNow(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()));
+	}
 }

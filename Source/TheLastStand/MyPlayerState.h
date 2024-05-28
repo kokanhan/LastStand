@@ -36,4 +36,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void printItem();
+
+	void receiveItems(TArray<FItem> dropItems);
 };

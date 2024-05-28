@@ -45,6 +45,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ESC;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* rightButton;
+
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
@@ -61,6 +64,8 @@ protected:
 	void OnTouchTriggered();
 	void OnTouchReleased();
 	void OnESCClicked();
+	void pickUp();
+
 private:
 	FVector CachedDestination;
 

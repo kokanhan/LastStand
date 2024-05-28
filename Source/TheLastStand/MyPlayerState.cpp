@@ -61,3 +61,11 @@ void AMyPlayerState::printItem()
 
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *s);
 }
+
+void AMyPlayerState::receiveItems(TArray<FItem> dropItems)
+{
+	for (int i = 0; i < dropItems.Num(); i += 1)
+	{
+		items[dropItems[i].id].count += dropItems[i].count;
+	}
+}
