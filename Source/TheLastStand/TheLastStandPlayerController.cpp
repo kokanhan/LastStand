@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "DestroyableObject.h"
 #include "MyPlayerState.h"
+#include "MyGameStateBase.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 
@@ -59,6 +60,10 @@ void ATheLastStandPlayerController::SetupInputComponent()
 
 		EnhancedInputComponent->BindAction(ESC, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::OnESCClicked);
 		EnhancedInputComponent->BindAction(rightButton, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::pickUp);
+
+		EnhancedInputComponent->BindAction(num1Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::useItem, 1);
+		EnhancedInputComponent->BindAction(num2Button, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::useItem, 2);
+		EnhancedInputComponent->BindAction(num3Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::useItem, 3);
 	}
 	else
 	{
@@ -158,4 +163,11 @@ void ATheLastStandPlayerController::pickUp()
 		ADestroyableObject* cur = Cast<ADestroyableObject>(hit.GetActor());
 		cur->dropNow(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()));
 	}
+}
+
+void ATheLastStandPlayerController::useItem(int cur)
+{
+	FHitResult hit(ForceInit);
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
+	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->playerUseItem(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()), cur, GetPawn()->GetActorLocation(), hit.Location);
 }

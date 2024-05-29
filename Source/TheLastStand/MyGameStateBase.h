@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
 #include "Item.h"
+#include "MyPlayerState.h"
 #include "MyGameStateBase.generated.h"
 
 /**
@@ -20,4 +21,6 @@ public:
 	TArray<TArray<FItem>> synthesisList;
 
 	void initSynthesisList();
+
+	void playerUseItem(AMyPlayerState* playState, int type, FVector startPos, FVector endPos);
 };

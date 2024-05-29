@@ -48,4 +48,6 @@ ATheLastStandCharacter::ATheLastStandCharacter()
 void ATheLastStandCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+	shootingCD -= DeltaSeconds;
 }

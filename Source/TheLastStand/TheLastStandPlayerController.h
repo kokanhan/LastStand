@@ -48,6 +48,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* rightButton;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* num1Button;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* num2Button;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* num3Button;
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
@@ -66,9 +72,12 @@ protected:
 	void OnESCClicked();
 	void pickUp();
 
+	void useItem(int cur);
+
 private:
 	FVector CachedDestination;
 
+	int curProjectileType = -1;
 	bool isOnInventoryLayout;
 	bool isOnSynLayout;
 	bool bIsTouch; // Is it a touch device

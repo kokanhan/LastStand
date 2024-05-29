@@ -3,6 +3,10 @@
 
 #include "MyGameStateBase.h"
 #include "MyBlueprintFunctionLibrary.h"
+#include "Projectiles/Projectile.h"
+#include "ZoneTrigger/DamageZone.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "TheLastStandCharacter.h"
 
 void AMyGameStateBase::initSynthesisList() 
 {
@@ -84,4 +88,30 @@ void AMyGameStateBase::initSynthesisList()
 	iron.Add(UMyBlueprintFunctionLibrary::itemInit(9, 1));
 	iron.Add(UMyBlueprintFunctionLibrary::itemInit(1, 15));
 	synthesisList.Add(iron);
+}
+
+void AMyGameStateBase::playerUseItem(AMyPlayerState* playState, int type, FVector startPos, FVector endPos)
+{
+	if (type == 1)
+	{
+		TSubclassOf<AProjectile> rock = LoadClass<AProjectile>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_ProjectileRock.BP_ProjectileRock_C'"));
+		AProjectile* cur = GetWorld()->SpawnActor<AProjectile>(rock, startPos, FRotator(), FActorSpawnParameters());
+		cur->activeProjectile(type, startPos, endPos);
+	}
+
+	if (type == 2)
+	{
+		if (Cast<ATheLastStandCharacter>(playState->GetPawn())->shootingCD <= 0) 
+		{
+			TSubclassOf<ADamageZone> bullet = LoadClass<ADamageZone>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_Bullet.BP_Bullet_C'"));
+			ADamageZone* cur = GetWorld()->SpawnActor<ADamageZone>(bullet, startPos, FRotator(), FActorSpawnParameters());
+
+			FVector velocity = (endPos - startPos);
+			velocity.Normalize();
+
+			cur->customValue.Add(FVector(velocity.X, velocity.Y, 0) * 50);
+
+			Cast<ATheLastStandCharacter>(playState->GetPawn())->shootingCD += 0.05f;
+		}
+	}
 }
