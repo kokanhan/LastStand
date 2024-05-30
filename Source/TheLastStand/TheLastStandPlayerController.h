@@ -73,6 +73,7 @@ protected:
 	void pickUp();
 
 	void useItem(int cur);
+	void buildItem(int cur);
 
 private:
 	FVector CachedDestination;
@@ -82,6 +83,9 @@ private:
 	bool isOnSynLayout;
 	bool bIsTouch; // Is it a touch device
 	float FollowTime; // For how long it has been pressed
+
+public:
+	void setCurBuildingPresetPos();
 };
 
 

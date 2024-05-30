@@ -7,9 +7,11 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "MyGameStateBase.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
+#include "TheLastStandPlayerController.h"
 
 ATheLastStandCharacter::ATheLastStandCharacter()
 {
@@ -50,4 +52,9 @@ void ATheLastStandCharacter::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
 
 	shootingCD -= DeltaSeconds;
+
+	if (isPlacingBuilding) 
+	{
+		Cast<ATheLastStandPlayerController>(GetController())->setCurBuildingPresetPos();
+	}
 }

@@ -16,14 +16,17 @@ class THELASTSTAND_API UMyUserWidget : public UUserWidget
 	
 public:
 	UFUNCTION(BlueprintImplementableEvent)
-	void showSynListLayout();
+	void showLayout(bool isShow);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void hideSynListLayout();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void drawSlotsInSynItem(const TArray<FVector>& pos);
+	void showSynListLayout(bool isShow);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void showInventoryLayout(bool isShow);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void showPlayerStatusLayout(bool isShow);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void drawSlotsInSynItem(const TArray<FVector>& pos);
 };

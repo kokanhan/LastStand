@@ -111,6 +111,10 @@ FString UMyBlueprintFunctionLibrary::getItemName(int id)
 	{
 		return "Back-Fierce";
 	}
+	else if (id == 23)
+	{
+		return "Water";
+	}
 
 	return "unknowed item";
 }

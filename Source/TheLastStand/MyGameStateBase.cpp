@@ -7,6 +7,7 @@
 #include "ZoneTrigger/DamageZone.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "TheLastStandCharacter.h"
+#include "ZoneTrigger/BuildingDetector.h"
 
 void AMyGameStateBase::initSynthesisList() 
 {
@@ -114,4 +115,45 @@ void AMyGameStateBase::playerUseItem(AMyPlayerState* playState, int type, FVecto
 			Cast<ATheLastStandCharacter>(playState->GetPawn())->shootingCD += 0.05f;
 		}
 	}
+}
+
+void AMyGameStateBase::playerTryBuild(AMyPlayerState* playState, int type, FVector pos)
+{
+	if (playerBuildPreset != NULL) 
+	{
+		playerStopBuild(playState);
+	}
+
+	TSubclassOf<ABuildingDetector> bullet = LoadClass<ABuildingDetector>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_BuildingDetector.BP_BuildingDetector_C'"));
+	ABuildingDetector* cur = GetWorld()->SpawnActor<ABuildingDetector>(bullet, pos, FRotator(), FActorSpawnParameters());
+	curBuildingType = type;
+
+	playerBuildPreset = cur;
+}
+
+void AMyGameStateBase::playerStopBuild(AMyPlayerState* playState)
+{
+	playerBuildPreset->Destroy();
+	playerBuildPreset = NULL;
+}
+
+void AMyGameStateBase::setBuidingPresetPos(FVector pos)
+{
+	if (playerBuildPreset != NULL) 
+	{
+		playerBuildPreset->SetActorLocation(pos);
+	}
+}
+
+bool AMyGameStateBase::playerStartBuild(AMyPlayerState* playState) 
+{
+	if (curBuildingType == 3) 
+	{
+		TSubclassOf<ADamageZone> bullet = LoadClass<ADamageZone>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_BackFerice.BP_BackFerice_C'"));
+		ADamageZone* cur = GetWorld()->SpawnActor<ADamageZone>(bullet, playerBuildPreset->GetActorLocation(), playerBuildPreset->GetActorRotation(), FActorSpawnParameters());
+
+		playerStopBuild(playState);
+	}
+
+	return false;
 }

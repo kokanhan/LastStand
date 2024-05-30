@@ -13,7 +13,7 @@ class ATheLastStandCharacter : public ACharacter
 
 public:
 	float shootingCD;
-
+	bool isPlacingBuilding;
 public:
 	ATheLastStandCharacter();
 

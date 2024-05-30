@@ -16,11 +16,20 @@ class THELASTSTAND_API AMyGameStateBase : public AGameStateBase
 {
 	GENERATED_BODY()
 	
+private:
+	AActor* playerBuildPreset;
+	int curBuildingType;
+
 public:
-	int itemTypeCount = 22;
+	int itemTypeCount = 24;
 	TArray<TArray<FItem>> synthesisList;
 
 	void initSynthesisList();
 
 	void playerUseItem(AMyPlayerState* playState, int type, FVector startPos, FVector endPos);
+	void playerTryBuild(AMyPlayerState* playState, int type, FVector pos);
+	void playerStopBuild(AMyPlayerState* playState);
+
+	void setBuidingPresetPos(FVector pos);
+	bool playerStartBuild(AMyPlayerState* playState);
 };
