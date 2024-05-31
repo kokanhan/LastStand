@@ -29,4 +29,10 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void drawSlotsInSynItem(const TArray<FVector>& pos);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void showHintLayout(bool isShow);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void pumpHintText(const FVector& screenPos, const FString& text);
 };
