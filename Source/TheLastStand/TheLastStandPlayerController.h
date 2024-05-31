@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
+#include "InputActionValue.h"
 #include "TheLastStandPlayerController.generated.h"
 
 /** Forward declaration to improve compiling times */
@@ -45,6 +46,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ESC;
 
+	/** Zoom Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ZoomAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	float ZoomStep = 10000.f;
+
+	
+
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
@@ -61,12 +71,15 @@ protected:
 	void OnTouchTriggered();
 	void OnTouchReleased();
 	void OnESCClicked();
+	void ZoomView(const FInputActionValue& Value);
 private:
 	FVector CachedDestination;
 
 	bool isOnSynLayout;
 	bool bIsTouch; // Is it a touch device
 	float FollowTime; // For how long it has been pressed
+	//ACharacter* LastStandCharacter;
+	
 };
 
 

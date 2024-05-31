@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TheLastStandPlayerController.h"
 #include "GameFramework/Pawn.h"
@@ -12,6 +12,10 @@
 #include "MyPlayerState.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/SpringArmComponent.h"
+//#include "TheLastStandCharacter.cpp"
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -56,11 +60,15 @@ void ATheLastStandPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Canceled, this, &ATheLastStandPlayerController::OnTouchReleased);
 
 		EnhancedInputComponent->BindAction(ESC, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::OnESCClicked);
+		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::ZoomView);
 	}
 	else
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
+
+	//set up axis binds for zoom in/out function
+	
 }
 
 void ATheLastStandPlayerController::OnInputStarted()
@@ -112,6 +120,10 @@ void ATheLastStandPlayerController::OnSetDestinationReleased()
 	}
 
 	FollowTime = 0.f;
+
+	// test see if get ATheLastStandCharacter or not
+	ATheLastStandCharacter* LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	//UE_LOG(LogTemp, Warning, TEXT("sha?: %f"), LastStandCharacter->gg);
 }
 
 // Triggered every frame when the input is held down
@@ -139,4 +151,18 @@ void ATheLastStandPlayerController::OnESCClicked()
 	}
 
 	isOnSynLayout = !isOnSynLayout;
+}
+
+
+void ATheLastStandPlayerController::ZoomView(const FInputActionValue& Value)
+{
+	
+
+	class ATheLastStandCharacter* LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this,0));
+	float ZoomAxisVal = Value.Get<float>();
+	float offset = ZoomAxisVal * ZoomStep * UGameplayStatics::GetWorldDeltaSeconds(this);
+	float armLength = LastStandCharacter->CameraBoom->TargetArmLength + offset;
+	LastStandCharacter->CameraBoom->TargetArmLength = FMath::Clamp(armLength, 2500.0f, 20000.0f);//改成可控制最大和最小值
+	UE_LOG(LogTemp, Warning, TEXT("sha?: %f"), LastStandCharacter->CameraBoom->TargetArmLength);
+
 }
