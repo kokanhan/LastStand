@@ -196,6 +196,15 @@ void ATheLastStandPlayerController::pickUp()
 	}
 }
 
+<<<<<<< HEAD
+=======
+
+
+
+	
+
+
+>>>>>>> pcglevel
 void ATheLastStandPlayerController::useItem(int cur)
 {
 	FHitResult hit(ForceInit);
@@ -229,6 +238,7 @@ void ATheLastStandPlayerController::setCurBuildingPresetPos()
 	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->setBuidingPresetPos(hit.Location);
 }
 
+<<<<<<< HEAD
 void ATheLastStandPlayerController::setCurBuildingPresetRot(bool isUp)
 {
 	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->setBuildingPresetRot(isUp, FApp::GetDeltaTime());
@@ -266,3 +276,19 @@ void ATheLastStandPlayerController::collectItem()
 		cur->Destroy();
 	}
 }
+=======
+
+// wuyule
+void ATheLastStandPlayerController::ZoomView(const FInputActionValue& Value)
+{
+
+
+	class ATheLastStandCharacter* LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	float ZoomAxisVal = Value.Get<float>();
+	float offset = ZoomAxisVal * ZoomStep * UGameplayStatics::GetWorldDeltaSeconds(this);
+	float armLength = LastStandCharacter->CameraBoom->TargetArmLength + offset;
+	LastStandCharacter->CameraBoom->TargetArmLength = FMath::Clamp(armLength, 2500.0f, 20000.0f);//改成可控制最大和最小值
+	UE_LOG(LogTemp, Warning, TEXT("sha?: %f"), LastStandCharacter->CameraBoom->TargetArmLength);
+
+}
+>>>>>>> pcglevel
