@@ -30,7 +30,7 @@ public:
 	class USpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	float gg =7.f;
+	float gg =9.f;
 
 private:
 	/** Top down camera */
