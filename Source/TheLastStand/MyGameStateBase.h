@@ -31,5 +31,6 @@ public:
 	void playerStopBuild(AMyPlayerState* playState);
 
 	void setBuidingPresetPos(FVector pos);
+	void setBuildingPresetRot(bool isUp, float deg);
 	bool playerStartBuild(AMyPlayerState* playState);
 };

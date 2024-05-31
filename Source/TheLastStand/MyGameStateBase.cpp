@@ -110,7 +110,7 @@ void AMyGameStateBase::playerUseItem(AMyPlayerState* playState, int type, FVecto
 			FVector velocity = (endPos - startPos);
 			velocity.Normalize();
 
-			cur->customValue.Add(FVector(velocity.X, velocity.Y, 0) * 50);
+			cur->customValue.Add(FVector(velocity.X, velocity.Y, velocity.Z) * 50);
 
 			Cast<ATheLastStandCharacter>(playState->GetPawn())->shootingCD += 0.05f;
 		}
@@ -156,4 +156,12 @@ bool AMyGameStateBase::playerStartBuild(AMyPlayerState* playState)
 	}
 
 	return false;
+}
+
+void AMyGameStateBase::setBuildingPresetRot(bool isUp, float deg)
+{
+	if (playerBuildPreset != NULL)
+	{
+		playerBuildPreset->SetActorRotation(playerBuildPreset->GetActorRotation() + FRotator(0, deg * isUp? 25.0 : -25.0, 0));
+	}
 }

@@ -54,6 +54,11 @@ public:
 	UInputAction* num2Button;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* num3Button;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* mouseWheelUp;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* mouseWheelDown;
+
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
@@ -86,6 +91,7 @@ private:
 
 public:
 	void setCurBuildingPresetPos();
+	void setCurBuildingPresetRot(bool isUp);
 };
 
 

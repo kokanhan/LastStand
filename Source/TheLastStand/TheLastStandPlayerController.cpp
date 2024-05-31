@@ -64,6 +64,9 @@ void ATheLastStandPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(num1Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::useItem, 1);
 		EnhancedInputComponent->BindAction(num2Button, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::useItem, 2);
 		EnhancedInputComponent->BindAction(num3Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::buildItem, 3);
+
+		EnhancedInputComponent->BindAction(mouseWheelUp, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::setCurBuildingPresetRot, true);
+		EnhancedInputComponent->BindAction(mouseWheelDown, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::setCurBuildingPresetRot, false);
 	}
 	else
 	{
@@ -81,9 +84,6 @@ void ATheLastStandPlayerController::OnSetDestinationTriggered()
 {
 	if (Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding)
 	{
-		Cast<AMyGameStateBase>(GetWorld()->GetGameState())->playerStartBuild(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()));
-		Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding = false;
-
 		return;
 	}
 
@@ -124,6 +124,14 @@ void ATheLastStandPlayerController::OnSetDestinationTriggered()
 
 void ATheLastStandPlayerController::OnSetDestinationReleased()
 {
+	if (Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding)
+	{
+		Cast<AMyGameStateBase>(GetWorld()->GetGameState())->playerStartBuild(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()));
+		Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding = false;
+
+		return;
+	}
+
 	// If it was a short press
 	if (FollowTime <= ShortPressThreshold)
 	{
@@ -138,28 +146,28 @@ void ATheLastStandPlayerController::OnSetDestinationReleased()
 // Triggered every frame when the input is held down
 void ATheLastStandPlayerController::OnTouchTriggered()
 {
+	if (Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding)
+	{
+		return;
+	}
+
 	bIsTouch = true;
 	OnSetDestinationTriggered();
 }
 
 void ATheLastStandPlayerController::OnTouchReleased()
 {
+	if (Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding)
+	{
+		return;
+	}
+
 	bIsTouch = false;
 	OnSetDestinationReleased();
 }
 
 void ATheLastStandPlayerController::OnESCClicked() 
 {
-	//if (!isOnSynLayout)
-	//{
-	//	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showSynListLayout();
-	//}
-	//else 
-	//{
-	//	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->hideSynListLayout();
-	//}
-
-	//isOnSynLayout = !isOnSynLayout;
 	isOnInventoryLayout = !isOnInventoryLayout;
 	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showLayout(isOnInventoryLayout);
 	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showInventoryLayout(isOnInventoryLayout);
@@ -217,4 +225,9 @@ void ATheLastStandPlayerController::setCurBuildingPresetPos()
 	FHitResult hit(ForceInit);
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
 	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->setBuidingPresetPos(hit.Location);
+}
+
+void ATheLastStandPlayerController::setCurBuildingPresetRot(bool isUp)
+{
+	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->setBuildingPresetRot(isUp, FApp::GetDeltaTime());
 }
