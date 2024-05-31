@@ -46,6 +46,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ESC;
 
+
 	/** Zoom Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ZoomAction;
@@ -53,7 +54,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	float ZoomStep = 10000.f;
 
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* rightButton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* num1Button;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* num2Button;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* num3Button;
+
 
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
@@ -71,15 +82,29 @@ protected:
 	void OnTouchTriggered();
 	void OnTouchReleased();
 	void OnESCClicked();
+
 	void ZoomView(const FInputActionValue& Value);
+
+	void pickUp();
+
+	void useItem(int cur);
+	void buildItem(int cur);
+
 private:
 	FVector CachedDestination;
 
+	int curProjectileType = -1;
+	bool isOnInventoryLayout;
 	bool isOnSynLayout;
 	bool bIsTouch; // Is it a touch device
 	float FollowTime; // For how long it has been pressed
+
 	//ACharacter* LastStandCharacter;
-	
+
+
+public:
+	void setCurBuildingPresetPos();
+
 };
 
 

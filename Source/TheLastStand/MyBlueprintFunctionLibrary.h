@@ -21,4 +21,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static FString getItemName(int id);
+
+	UFUNCTION(BlueprintCallable)
+	static UTexture2D* loadTexture(const FString& path);
 };

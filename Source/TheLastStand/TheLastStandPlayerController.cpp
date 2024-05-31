@@ -9,7 +9,10 @@
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
+#include "Kismet/GameplayStatics.h"
+#include "DestroyableObject.h"
 #include "MyPlayerState.h"
+#include "MyGameStateBase.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 #include "Kismet/GameplayStatics.h"
@@ -60,7 +63,15 @@ void ATheLastStandPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Canceled, this, &ATheLastStandPlayerController::OnTouchReleased);
 
 		EnhancedInputComponent->BindAction(ESC, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::OnESCClicked);
+
 		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::ZoomView);
+
+		EnhancedInputComponent->BindAction(rightButton, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::pickUp);
+
+		EnhancedInputComponent->BindAction(num1Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::useItem, 1);
+		EnhancedInputComponent->BindAction(num2Button, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::useItem, 2);
+		EnhancedInputComponent->BindAction(num3Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::buildItem, 3);
+
 	}
 	else
 	{
@@ -79,6 +90,19 @@ void ATheLastStandPlayerController::OnInputStarted()
 // Triggered every frame when the input is held down
 void ATheLastStandPlayerController::OnSetDestinationTriggered()
 {
+	if (Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding)
+	{
+		Cast<AMyGameStateBase>(GetWorld()->GetGameState())->playerStartBuild(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()));
+		Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding = false;
+
+		return;
+	}
+
+	if (isOnInventoryLayout) 
+	{
+		return;
+	}
+
 	// We flag that the input is being pressed
 	FollowTime += GetWorld()->GetDeltaSeconds();
 	
@@ -141,16 +165,41 @@ void ATheLastStandPlayerController::OnTouchReleased()
 
 void ATheLastStandPlayerController::OnESCClicked() 
 {
-	if (!isOnSynLayout)
+	//if (!isOnSynLayout)
+	//{
+	//	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showSynListLayout();
+	//}
+	//else 
+	//{
+	//	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->hideSynListLayout();
+	//}
+
+	//isOnSynLayout = !isOnSynLayout;
+	isOnInventoryLayout = !isOnInventoryLayout;
+	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showLayout(isOnInventoryLayout);
+	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showInventoryLayout(isOnInventoryLayout);
+	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showSynListLayout(isOnInventoryLayout);
+}
+
+void ATheLastStandPlayerController::pickUp()
+{
+	if (Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding)
 	{
-		Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showSynListLayout();
+		Cast<AMyGameStateBase>(GetWorld()->GetGameState())->playerStopBuild(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()));
+		Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding = false;
+
+		return;
 	}
-	else 
+	FHitResult hit(ForceInit);
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
+
+	if (Cast<ADestroyableObject>(hit.GetActor()) != NULL)
 	{
-		Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->hideSynListLayout();
+		ADestroyableObject* cur = Cast<ADestroyableObject>(hit.GetActor());
+		cur->dropNow(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()));
 	}
 
-	isOnSynLayout = !isOnSynLayout;
+	
 }
 
 
@@ -166,3 +215,40 @@ void ATheLastStandPlayerController::ZoomView(const FInputActionValue& Value)
 	UE_LOG(LogTemp, Warning, TEXT("sha?: %f"), LastStandCharacter->CameraBoom->TargetArmLength);
 
 }
+
+	
+
+
+void ATheLastStandPlayerController::useItem(int cur)
+{
+	FHitResult hit(ForceInit);
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
+	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->playerUseItem(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()), cur, GetPawn()->GetActorLocation(), hit.Location);
+
+	FVector dir = hit.Location - GetPawn()->GetActorLocation();
+	dir.Normalize();
+
+	GetPawn()->SetActorRotation(dir.ToOrientationRotator());
+}
+
+void ATheLastStandPlayerController::buildItem(int cur) 
+{
+	if (isOnInventoryLayout)
+	{
+		return;
+	}
+
+	FHitResult hit(ForceInit);
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
+	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->playerTryBuild(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()), cur, hit.Location);
+
+	Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding = true;
+}
+
+void ATheLastStandPlayerController::setCurBuildingPresetPos()
+{
+	FHitResult hit(ForceInit);
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
+	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->setBuidingPresetPos(hit.Location);
+}
+

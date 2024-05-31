@@ -12,6 +12,9 @@ class ATheLastStandCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+	float shootingCD;
+	bool isPlacingBuilding;
+public:
 	ATheLastStandCharacter();
 
 	// Called every frame.
