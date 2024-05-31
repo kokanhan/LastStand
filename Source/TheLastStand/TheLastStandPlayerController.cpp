@@ -15,6 +15,7 @@
 #include "MyGameStateBase.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
+#include "GameFramework/SpringArmComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -274,9 +275,7 @@ void ATheLastStandPlayerController::collectItem()
 // wuyule
 void ATheLastStandPlayerController::ZoomView(const FInputActionValue& Value)
 {
-
-
-	class ATheLastStandCharacter* LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	ATheLastStandCharacter* LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 	float ZoomAxisVal = Value.Get<float>();
 	float offset = ZoomAxisVal * ZoomStep * UGameplayStatics::GetWorldDeltaSeconds(this);
 	float armLength = LastStandCharacter->CameraBoom->TargetArmLength + offset;
