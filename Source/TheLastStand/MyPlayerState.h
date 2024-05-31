@@ -38,5 +38,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void printItem();
 
+	UPROPERTY(BlueprintReadOnly)
+	TArray<AActor*> collectableObjects;
+
 	void receiveItems(TArray<FItem> dropItems);
 };
