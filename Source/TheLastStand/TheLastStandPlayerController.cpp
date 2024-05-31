@@ -69,6 +69,7 @@ void ATheLastStandPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(mouseWheelDown, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::setCurBuildingPresetRot, false);
 
 		EnhancedInputComponent->BindAction(FButton, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::collectItem);
+		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::ZoomView);
 	}
 	else
 	{
@@ -196,6 +197,7 @@ void ATheLastStandPlayerController::pickUp()
 	}
 }
 
+
 void ATheLastStandPlayerController::useItem(int cur)
 {
 	FHitResult hit(ForceInit);
@@ -228,6 +230,7 @@ void ATheLastStandPlayerController::setCurBuildingPresetPos()
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
 	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->setBuidingPresetPos(hit.Location);
 }
+
 
 void ATheLastStandPlayerController::setCurBuildingPresetRot(bool isUp)
 {
@@ -266,3 +269,19 @@ void ATheLastStandPlayerController::collectItem()
 		cur->Destroy();
 	}
 }
+
+
+// wuyule
+void ATheLastStandPlayerController::ZoomView(const FInputActionValue& Value)
+{
+
+
+	class ATheLastStandCharacter* LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	float ZoomAxisVal = Value.Get<float>();
+	float offset = ZoomAxisVal * ZoomStep * UGameplayStatics::GetWorldDeltaSeconds(this);
+	float armLength = LastStandCharacter->CameraBoom->TargetArmLength + offset;
+	LastStandCharacter->CameraBoom->TargetArmLength = FMath::Clamp(armLength, 2500.0f, 20000.0f);//改成可控制最大和最小值
+	UE_LOG(LogTemp, Warning, TEXT("sha?: %f"), LastStandCharacter->CameraBoom->TargetArmLength);
+
+}
+
