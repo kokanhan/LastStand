@@ -69,6 +69,7 @@ void ATheLastStandPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(mouseWheelDown, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::setCurBuildingPresetRot, false);
 
 		EnhancedInputComponent->BindAction(FButton, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::collectItem);
+		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::ZoomView);
 	}
 	else
 	{
@@ -196,15 +197,7 @@ void ATheLastStandPlayerController::pickUp()
 	}
 }
 
-<<<<<<< HEAD
-=======
 
-
-
-	
-
-
->>>>>>> pcglevel
 void ATheLastStandPlayerController::useItem(int cur)
 {
 	FHitResult hit(ForceInit);
@@ -238,7 +231,7 @@ void ATheLastStandPlayerController::setCurBuildingPresetPos()
 	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->setBuidingPresetPos(hit.Location);
 }
 
-<<<<<<< HEAD
+
 void ATheLastStandPlayerController::setCurBuildingPresetRot(bool isUp)
 {
 	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->setBuildingPresetRot(isUp, FApp::GetDeltaTime());
@@ -276,7 +269,7 @@ void ATheLastStandPlayerController::collectItem()
 		cur->Destroy();
 	}
 }
-=======
+
 
 // wuyule
 void ATheLastStandPlayerController::ZoomView(const FInputActionValue& Value)
@@ -291,4 +284,4 @@ void ATheLastStandPlayerController::ZoomView(const FInputActionValue& Value)
 	UE_LOG(LogTemp, Warning, TEXT("sha?: %f"), LastStandCharacter->CameraBoom->TargetArmLength);
 
 }
->>>>>>> pcglevel
+
