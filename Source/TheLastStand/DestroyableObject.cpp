@@ -4,7 +4,6 @@
 #include "DestroyableObject.h"
 #include "Math/UnrealMathUtility.h"
 #include "MyBlueprintFunctionLibrary.h"
-#include "TheLastStandPlayerController.h"
 
 // Sets default values
 ADestroyableObject::ADestroyableObject()
@@ -35,14 +34,6 @@ void ADestroyableObject::addDropItem(int id, int minCount, int maxCount)
 
 void ADestroyableObject::dropNow(AMyPlayerState* player)
 {
-	FVector2D ScreenLocation;
-	Cast<ATheLastStandPlayerController>(player->GetPlayerController())->ProjectWorldLocationToScreen(GetActorLocation(), ScreenLocation);
-
-	for (int i = 0; i < dropItems.Num(); i += 1) 
-	{
-		Cast<AMyPlayerState>(player)->layout->pumpHintText(FVector(ScreenLocation.X, ScreenLocation.Y - 40 * i, 0), "Receive " + dropItems[i].name + "X" + FString::FromInt(dropItems[i].count));
-	}
-
 	player->receiveItems(dropItems);
 
 	Destroy();

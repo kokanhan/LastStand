@@ -58,8 +58,6 @@ public:
 	UInputAction* mouseWheelUp;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* mouseWheelDown;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* FButton;
 
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
@@ -81,7 +79,6 @@ protected:
 
 	void useItem(int cur);
 	void buildItem(int cur);
-	void collectItem();
 
 private:
 	FVector CachedDestination;

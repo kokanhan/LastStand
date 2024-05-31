@@ -57,6 +57,4 @@ void ATheLastStandCharacter::Tick(float DeltaSeconds)
 	{
 		Cast<ATheLastStandPlayerController>(GetController())->setCurBuildingPresetPos();
 	}
-
-	Cast<AMyPlayerState>(GetPlayerState())->layout->showHintLayout(Cast<AMyPlayerState>(GetPlayerState())->collectableObjects.Num() > 0);
 }

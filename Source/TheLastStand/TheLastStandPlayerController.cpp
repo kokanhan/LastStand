@@ -59,7 +59,7 @@ void ATheLastStandPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Canceled, this, &ATheLastStandPlayerController::OnTouchReleased);
 
 		EnhancedInputComponent->BindAction(ESC, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::OnESCClicked);
-		//EnhancedInputComponent->BindAction(rightButton, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::pickUp);
+		EnhancedInputComponent->BindAction(rightButton, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::pickUp);
 
 		EnhancedInputComponent->BindAction(num1Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::useItem, 1);
 		EnhancedInputComponent->BindAction(num2Button, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::useItem, 2);
@@ -67,8 +67,6 @@ void ATheLastStandPlayerController::SetupInputComponent()
 
 		EnhancedInputComponent->BindAction(mouseWheelUp, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::setCurBuildingPresetRot, true);
 		EnhancedInputComponent->BindAction(mouseWheelDown, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::setCurBuildingPresetRot, false);
-
-		EnhancedInputComponent->BindAction(FButton, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::collectItem);
 	}
 	else
 	{
@@ -232,37 +230,4 @@ void ATheLastStandPlayerController::setCurBuildingPresetPos()
 void ATheLastStandPlayerController::setCurBuildingPresetRot(bool isUp)
 {
 	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->setBuildingPresetRot(isUp, FApp::GetDeltaTime());
-}
-
-void ATheLastStandPlayerController::collectItem()
-{
-	float minDis = 8753;
-	float minIndex = -1;
-
-	for (int i = 0; i < Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->collectableObjects.Num(); i += 1) 
-	{
-		float curDis = FVector::Dist(GetPawn()->GetActorLocation(), Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->collectableObjects[i]->GetActorLocation());
-
-		if (curDis < minDis)
-		{
-			minDis = curDis;
-			minIndex = i;
-		}
-	}
-
-	if (minIndex != -1)
-	{
-		ADestroyableObject* cur = Cast<ADestroyableObject>(Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->collectableObjects[minIndex]);
-		Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->collectableObjects.RemoveAt(minIndex);
-
-		if (cur == NULL) 
-		{
-			UE_LOG(LogTemp, Error, TEXT("Object going to collect have no tag: Collectable"));
-
-			return;
-		}
-
-		cur->dropNow(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()));
-		cur->Destroy();
-	}
 }
