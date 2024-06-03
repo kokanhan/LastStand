@@ -178,8 +178,8 @@ void ATheLastStandPlayerController::OnESCClicked()
 	isOnInventoryLayout = !isOnInventoryLayout;
 	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showLayout(isOnInventoryLayout);
 	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showInventoryLayout(isOnInventoryLayout);
-	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showSynListLayout(isOnInventoryLayout);
-	//Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showPlayerStatusLayout(isOnInventoryLayout);
+	//Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showSynListLayout(isOnInventoryLayout);
+	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showPlayerStatusLayout(isOnInventoryLayout);
 }
 
 void ATheLastStandPlayerController::pickUp()

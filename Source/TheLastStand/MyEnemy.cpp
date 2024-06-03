@@ -32,7 +32,10 @@ void AMyEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
+	if (curHP <= 0) 
+	{
+		Destroy();
+	}
 }
 
 
