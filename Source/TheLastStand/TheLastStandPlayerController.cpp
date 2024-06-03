@@ -25,12 +25,20 @@ ATheLastStandPlayerController::ATheLastStandPlayerController()
 	DefaultMouseCursor = EMouseCursor::Default;
 	CachedDestination = FVector::ZeroVector;
 	FollowTime = 0.f;
+	startViewing = false;
+	LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 }
 
 void ATheLastStandPlayerController::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	ScreenResult = FVector2D(1, 1);
+
+	ScreenResult.X = (GSystemResolution.ResX)/2;
+	ScreenResult.Y = (GSystemResolution.ResY)/2;
+
 }
 
 void ATheLastStandPlayerController::SetupInputComponent()
@@ -74,6 +82,7 @@ void ATheLastStandPlayerController::SetupInputComponent()
 
 		EnhancedInputComponent->BindAction(FButton, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::collectItem);
 		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::ZoomView);
+		EnhancedInputComponent->BindAction(ViewAction, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::ViewMap);
 	}
 	else
 	{
@@ -303,14 +312,77 @@ void ATheLastStandPlayerController::collectItem()
 // wuyule
 void ATheLastStandPlayerController::ZoomView(const FInputActionValue& Value)
 {
-	ATheLastStandCharacter* LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 	float ZoomAxisVal = Value.Get<float>();
 	float offset = ZoomAxisVal * ZoomStep * UGameplayStatics::GetWorldDeltaSeconds(this);
 	float armLength = LastStandCharacter->CameraBoom->TargetArmLength + offset;
 	LastStandCharacter->CameraBoom->TargetArmLength = FMath::Clamp(armLength, 2500.0f, 20000.0f);//改成可控制最大和最小值
-	UE_LOG(LogTemp, Warning, TEXT("sha?: %f"), LastStandCharacter->CameraBoom->TargetArmLength);
+	//UE_LOG(LogTemp, Warning, TEXT("sha?: %f"), LastStandCharacter->CameraBoom->TargetArmLength);
 
 }
+
+void ATheLastStandPlayerController::ViewMap()
+{
+	GEngine->GameViewport->GetMousePosition(mouse_coordinates);
+	// ATheLastStandCharacter* LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	// map coord
+	// Y min = -25335, Y max = 26480
+	// X min = -26670, X max = 28779
+	LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	UE_LOG(LogTemp, Warning, TEXT("hello"));
+	
+
+	if (startViewing == true)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("hello kai"));
+		startViewing = false;
+		LastStandCharacter->CameraBoom->TargetOffset.X = 0.f;
+		LastStandCharacter->CameraBoom->TargetOffset.Y = 0.f;
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("hello guan"));
+		startViewing = true;
+
+	}
+}
+
+
+void ATheLastStandPlayerController::Tick(float DeltaTime)
+{
+	// Call the base class  
+	Super::Tick(DeltaTime);
+	GEngine->GameViewport->GetMousePosition(mouse_coordinates);
+
+	if (startViewing == true)
+	{
+		LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+		UE_LOG(LogTemp, Warning, TEXT("zenmele"));
+		if (mouse_coordinates.X < (0.3*ScreenResult.X)) {
+			gogo.X = -1 * (ScreenResult.X - mouse_coordinates.X);
+		}
+		if (mouse_coordinates.X >= (1.7*ScreenResult.X)) {
+			gogo.X = 1 * mouse_coordinates.X;
+		}
+		if (mouse_coordinates.Y < (0.7*ScreenResult.Y)) {
+			gogo.Y = -1 * (ScreenResult.Y - mouse_coordinates.Y);
+		}
+		if (mouse_coordinates.Y >= (ScreenResult.Y*1.7)) {
+			gogo.Y = 1 * (mouse_coordinates.Y);
+		}
+		if (mouse_coordinates.X > (0.3 * ScreenResult.X)  && mouse_coordinates.X < (1.7 * ScreenResult.X)) {
+			gogo.X = 0;
+		}
+
+		if (mouse_coordinates.Y > (0.7 * ScreenResult.Y) && mouse_coordinates.Y < (1.7 * ScreenResult.Y)) {
+			gogo.Y = 0;
+		}
+
+		LastStandCharacter->CameraBoom->TargetOffset.X += gogo.X * viewMapSpeed;
+		LastStandCharacter->CameraBoom->TargetOffset.Y += gogo.Y * viewMapSpeed;
+	}
+}
+
+
 
 void ATheLastStandPlayerController::shoot() 
 {

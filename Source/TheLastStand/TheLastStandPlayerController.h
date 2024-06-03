@@ -6,6 +6,7 @@
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
 #include "InputActionValue.h"
+#include "TheLastStandCharacter.h"
 #include "TheLastStandPlayerController.generated.h"
 
 /** Forward declaration to improve compiling times */
@@ -77,6 +78,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	float ZoomStep = 10000.f;
 
+
+	/** Zoom Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ViewAction;
+
+	UPROPERTY(EditAnywhere, Category = "View Map")
+	float viewMapSpeed = 0.5f;
+
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
@@ -100,6 +109,7 @@ protected:
 	void collectItem();
 	void ZoomView(const FInputActionValue& Value);
 	void shoot();
+	void ViewMap();
 private:
 	FVector CachedDestination;
 
@@ -108,11 +118,19 @@ private:
 	bool isOnSynLayout;
 	bool bIsTouch; // Is it a touch device
 	float FollowTime; // For how long it has been pressed
-
+	bool startViewing;
+	FVector2D mouse_coordinates;
+	ATheLastStandCharacter* LastStandCharacter;
+	FVector2D ScreenResult;
+	FVector2D gogo;
+	
 
 public:
 	void setCurBuildingPresetPos();
 	void setCurBuildingPresetRot(bool isUp);
+	virtual void Tick(float DeltaTime) override;
+
+	
 };
 
 

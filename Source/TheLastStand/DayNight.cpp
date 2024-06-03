@@ -34,7 +34,7 @@ void ADayNight::Tick(float DeltaTime)
 	{
 		//
 		LightSource->AddActorLocalRotation(FRotator((UGameplayStatics::GetWorldDeltaSeconds(this) * TurnRate), 0, 0));
-		UE_LOG(LogTemp, Warning, TEXT("Sun Rotation is %s"), *LightSource->GetActorRotation().ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("Sun Rotation is %s"), *LightSource->GetActorRotation().ToString());
 
 		// Rotation X = 12 is night
 		if (LightSource->GetActorRotation().Pitch > 12.f) {
