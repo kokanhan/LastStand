@@ -182,6 +182,24 @@ bool AMyGameStateBase::playerStartBuild(AMyPlayerState* playState)
 		playState->items[curBuildingType].count -= 1;
 	}
 
+	if (curBuildingType == 14)
+	{
+		TSubclassOf<ADamageZone> electricWall = LoadClass<ADamageZone>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_Daihou.BP_Daihou_C'"));
+		GetWorld()->SpawnActor<ADamageZone>(electricWall, playerBuildPreset->GetActorLocation(), playerBuildPreset->GetActorRotation(), FActorSpawnParameters());
+		playerBuildPreset->Destroy();
+
+		playState->items[curBuildingType].count -= 1;
+	}
+
+	if (curBuildingType == 15)
+	{
+		TSubclassOf<ADamageZone> electricWall = LoadClass<ADamageZone>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_SDaihou.BP_SDaihou_C'"));
+		GetWorld()->SpawnActor<ADamageZone>(electricWall, playerBuildPreset->GetActorLocation(), playerBuildPreset->GetActorRotation(), FActorSpawnParameters());
+		playerBuildPreset->Destroy();
+
+		playState->items[curBuildingType].count -= 1;
+	}
+
 	if (curBuildingType == 21)
 	{
 		TSubclassOf<ADamageZone> wall = LoadClass<ADamageZone>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_WallBlocker.BP_WallBlocker_C'"));

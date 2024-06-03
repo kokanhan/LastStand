@@ -38,7 +38,7 @@ void AEnemyAIController::Tick(float DeltaTime)
 
 	FVector dir = GetPawn()->GetActorLocation() - PlayerPawn->GetActorLocation();
 	dir.Normalize();
-	//UE_LOG(LogTemp, Warning, TEXT("kaishi tick"));
+
 	//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, PlayerPawn->GetActorLocation());
 	
 	

@@ -14,9 +14,12 @@ class THELASTSTAND_API ADamageZone : public AActor
 public:
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FVector> customValue;
-
-private:
+	UPROPERTY(BlueprintReadWrite)
 	TArray<AActor*> objectList;
+
+	UPROPERTY(BlueprintReadWrite)
+	TArray<AActor*> warningArea;
+private:
 	TArray<float> cdList;
 	
 	float cd;
@@ -42,6 +45,8 @@ public:
 	void objectExit(AActor* cur);
 	UFUNCTION(BlueprintCallable)
 	void setProperty(float maxHP, float time, float damage, float cooldown);
+	UFUNCTION(BlueprintCallable)
+	AActor* getClosestEnemy(int index);
 private:
 	void applyDMG(AActor* cur);
 };

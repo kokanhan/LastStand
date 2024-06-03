@@ -31,7 +31,15 @@ void AProjectile::Tick(float DeltaTime)
         FVector NewPosition = InitialPosition;
         NewPosition.X += InitialVelocity.X * TimeElapsed;
         NewPosition.Y += InitialVelocity.Y * TimeElapsed;
-        NewPosition.Z += InitialVelocity.Z * TimeElapsed + 0.5f * Gravity * FMath::Square(TimeElapsed);
+
+        if (!highShoot)
+        {
+            NewPosition.Z += InitialVelocity.Z * TimeElapsed + 0.5f * Gravity * FMath::Square(TimeElapsed);
+        }
+        else 
+        {
+            NewPosition.Z += InitialVelocity.Z * TimeElapsed;
+        }
 
         SetActorLocation(NewPosition);
 
@@ -47,9 +55,10 @@ void AProjectile::Tick(float DeltaTime)
     }
 }
 
-void AProjectile::activeProjectile(int curType, FVector StartLocation, FVector TargetLocation)
+void AProjectile::activeProjectile(int curType, FVector StartLocation, FVector TargetLocation, float spd)
 {
     this->type = curType;
+    LaunchSpeed = spd;
 
     InitialPosition = StartLocation;
     TargetPosition = TargetLocation;
@@ -67,11 +76,11 @@ void AProjectile::activeProjectile(int curType, FVector StartLocation, FVector T
 
 void AProjectile::castExplosionEffect()
 {
-    //if (type == 1) 
-    //{
-    //    TSubclassOf<ADamageZone> zone = LoadClass<ADamageZone>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_RockExplosion.BP_RockExplosion_C'"));
-    //    ADamageZone* cur = GetWorld()->SpawnActor<ADamageZone>(zone, TargetPosition, FRotator(), FActorSpawnParameters());
-    //}
+    if (type == 17) 
+    {
+        TSubclassOf<ADamageZone> zone = LoadClass<ADamageZone>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_RockExplosion.BP_RockExplosion_C'"));
+        ADamageZone* cur = GetWorld()->SpawnActor<ADamageZone>(zone, TargetPosition, FRotator(), FActorSpawnParameters());
+    }
 
     if (type == 11)
     {
@@ -99,7 +108,16 @@ void AProjectile::CalculateLaunchParameters()
     // Distance on the X-Y plane
     float Distance = Delta.Size2D(); 
     float HeightDifference = Delta.Z;
-    FlyDuration = CalculateFlightTime(0, HeightDifference);
+
+    if (HeightDifference > 0)
+    {
+        highShoot = true;
+        FlyDuration = Distance / LaunchSpeed;
+    }
+    else 
+    {
+        FlyDuration = CalculateFlightTime(0, HeightDifference);
+    }
 
     float Term1 = FMath::Square(LaunchSpeed) - Gravity * HeightDifference;
     float Term2 = FMath::Square(LaunchSpeed) - 2 * Gravity * HeightDifference;
@@ -115,8 +133,15 @@ void AProjectile::CalculateLaunchParameters()
 
     InitialVelocity.X = LaunchSpeed * (Distance / (FlyDuration * LaunchSpeed)) * (Delta.X / Distance) * FMath::Cos(LaunchAngleRad);
     InitialVelocity.Y = LaunchSpeed * (Distance / (FlyDuration * LaunchSpeed)) * (Delta.Y / Distance) * FMath::Cos(LaunchAngleRad);
-    InitialVelocity.Z = LaunchSpeed * FMath::Sin(LaunchAngleRad);
-
+    if (HeightDifference < 0)
+    {
+        InitialVelocity.Z = LaunchSpeed * FMath::Sin(LaunchAngleRad);
+    }
+    else 
+    {
+        InitialVelocity *= 3.0;
+        FlyDuration /= 3.0;
+    }
     //UE_LOG(LogTemp, Warning, TEXT("calDis = %f flyTime = %f vel = %s"), Distance, CalculateFlightTime(0, HeightDifference), *InitialVelocity.ToString());
 
 }

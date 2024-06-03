@@ -31,6 +31,7 @@ private:
 	
 
 public:
-	
+	UPROPERTY(BlueprintReadWrite)
+	float curHP = 500;
 
 };

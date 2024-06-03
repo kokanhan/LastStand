@@ -39,7 +39,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void activeProjectile(int curType, FVector startPos, FVector TargetLocation);
+	UFUNCTION(BlueprintCallable)
+	void activeProjectile(int curType, FVector startPos, FVector TargetLocation, float spd = 1000);
 	void castExplosionEffect();
 
 	void setSpeed(float targetSpd);
@@ -48,4 +49,5 @@ private:
 	float CalculateFlightTime(float InitialVelocityZ, float HeightDifference);
 	void CalculateLaunchParameters();
 
+	bool highShoot;
 };

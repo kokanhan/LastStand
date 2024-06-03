@@ -2,6 +2,7 @@
 
 
 #include "DamageZone.h"
+#include "../MyEnemy.h"
 
 // Sets default values
 ADamageZone::ADamageZone()
@@ -67,7 +68,7 @@ void ADamageZone::objectExit(AActor* cur)
 void ADamageZone::applyDMG(AActor* cur)
 {
 	//APPLY DAMAGE TO ACTOR
-	//Cast<AMonster>(cur)->curHP -= dmg;
+	Cast<AMyEnemy>(cur)->curHP -= dmg;
 
 	UE_LOG(LogTemp, Warning, TEXT("IS IN"));
 
@@ -80,4 +81,46 @@ void ADamageZone::setProperty(float maxHP, float time, float damage, float coold
 	curTime = time;
 	dmg = damage;
 	cd = cooldown;
+}
+
+AActor* ADamageZone::getClosestEnemy(int index)
+{
+	if (index >= warningArea.Num())
+	{
+		index = warningArea.Num() - 1;
+	}
+
+	TArray<float> disList;
+	TArray<int> indexList;
+
+	for (int i = 0; i < warningArea.Num(); i += 1) 
+	{
+		disList.Add(FVector::Dist(GetActorLocation(), warningArea[i]->GetActorLocation()));
+		indexList.Add(i);
+	}
+
+	for (int i = 0; i <= index; i += 1) 
+	{
+		int curMin = 9999999;
+		int curIndex = -1;
+
+		for (int j = 0; j < disList.Num(); j += 1)
+		{
+			if (disList[j] < curMin)
+			{
+				curMin = disList[j];
+				curIndex = j;
+			}
+		}
+
+		if (i == index) 
+		{
+			return warningArea[indexList[curIndex]];
+		}
+
+		disList.RemoveAt(curIndex);
+		indexList.RemoveAt(curIndex);
+	}
+
+	return NULL;
 }
