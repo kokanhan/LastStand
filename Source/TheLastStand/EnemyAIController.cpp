@@ -38,6 +38,7 @@ void AEnemyAIController::Tick(float DeltaTime)
 
 	FVector dir = GetPawn()->GetActorLocation() - PlayerPawn->GetActorLocation();
 	dir.Normalize();
+
 	//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, PlayerPawn->GetActorLocation());
 	
 	
