@@ -77,6 +77,7 @@ void ADamageZone::applyDMG(AActor* cur)
 
 void ADamageZone::setProperty(float maxHP, float time, float damage, float cooldown)
 {
+	hp = maxHP;
 	curHP = maxHP;
 	curTime = time;
 	dmg = damage;

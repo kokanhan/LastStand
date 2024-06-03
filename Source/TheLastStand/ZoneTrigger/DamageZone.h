@@ -19,12 +19,15 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	TArray<AActor*> warningArea;
+	UPROPERTY(BlueprintReadOnly)
+	float hp;
+	UPROPERTY(BlueprintReadOnly)
+	float curHP;
 private:
 	TArray<float> cdList;
 	
 	float cd;
 	float dmg;
-	float curHP;
 	float curTime;
 
 public:	

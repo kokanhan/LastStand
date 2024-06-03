@@ -14,15 +14,22 @@ void AMyPlayerState::initItemList()
 
 	for (int i = 0; i < gameState->itemTypeCount; i += 1)
 	{
-		if (ids.Contains(i))
-		{
-			items.Add(UMyBlueprintFunctionLibrary::itemInit(i, 3));
-		}
-		else 
-		{
-			items.Add(UMyBlueprintFunctionLibrary::itemInit(i, 0));
-		}
+		items.Add(UMyBlueprintFunctionLibrary::itemInit(i, 0));
 	}
+
+	for (int i = 0; i < 2; i += 1)
+	{
+		items[i].count = 50;
+	}
+
+	for (int i = 2; i < 6; i += 1)
+	{
+		items[i].count = 10;
+	}
+
+	items[11].count = 1;
+	items[18].count = 500;
+
 	
 	equippedItems.Add(UMyBlueprintFunctionLibrary::itemInit(-1));
 	equippedItems.Add(UMyBlueprintFunctionLibrary::itemInit(-1));

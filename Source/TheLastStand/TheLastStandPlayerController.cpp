@@ -303,6 +303,11 @@ void ATheLastStandPlayerController::collectItem()
 // wuyule
 void ATheLastStandPlayerController::ZoomView(const FInputActionValue& Value)
 {
+	if (Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding || isOnInventoryLayout) 
+	{
+		return;
+	}
+
 	ATheLastStandCharacter* LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 	float ZoomAxisVal = Value.Get<float>();
 	float offset = ZoomAxisVal * ZoomStep * UGameplayStatics::GetWorldDeltaSeconds(this);
@@ -316,6 +321,18 @@ void ATheLastStandPlayerController::shoot()
 {
 	FHitResult hit(ForceInit);
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
+
+	FVector targetPos;
+
+	if (hit.GetActor() != NULL && hit.GetActor()->ActorHasTag("Monster")) 
+	{
+		targetPos = hit.GetActor()->GetActorLocation();
+	}
+	else 
+	{
+		targetPos = FVector(hit.Location.X, hit.Location.Y, GetPawn()->GetActorLocation().Z);
+	}
+
 	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->shootAtPos(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()), hit.Location);
 
 	FVector dir = hit.Location - GetPawn()->GetActorLocation();

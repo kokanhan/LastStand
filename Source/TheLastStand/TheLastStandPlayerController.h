@@ -77,6 +77,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	float ZoomStep = 10000.f;
 
+
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
@@ -104,13 +105,15 @@ private:
 	FVector CachedDestination;
 
 	int curProjectileType = -1;
-	bool isOnInventoryLayout;
 	bool isOnSynLayout;
 	bool bIsTouch; // Is it a touch device
 	float FollowTime; // For how long it has been pressed
 
 
 public:
+	UPROPERTY(BlueprintReadWrite)
+	bool isOnInventoryLayout;
+
 	void setCurBuildingPresetPos();
 	void setCurBuildingPresetRot(bool isUp);
 };

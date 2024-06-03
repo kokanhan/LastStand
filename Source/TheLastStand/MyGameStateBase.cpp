@@ -241,7 +241,7 @@ void AMyGameStateBase::shootAtPos(AMyPlayerState* playState, FVector pos)
 
 		cur->customValue.Add(FVector(velocity.X, velocity.Y, velocity.Z) * 50);
 
-		Cast<ATheLastStandCharacter>(playState->GetPawn())->shootingCD += 0.05f;
+		Cast<ATheLastStandCharacter>(playState->GetPawn())->shootingCD = 0.1f;
 
 		playState->items[18].count -= 1;
 	}
