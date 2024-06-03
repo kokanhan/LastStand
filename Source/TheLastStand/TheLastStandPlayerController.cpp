@@ -62,12 +62,15 @@ void ATheLastStandPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(ESC, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::OnESCClicked);
 		//EnhancedInputComponent->BindAction(rightButton, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::pickUp);
 
-		EnhancedInputComponent->BindAction(num1Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::useItem, 1);
-		EnhancedInputComponent->BindAction(num2Button, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::useItem, 2);
-		EnhancedInputComponent->BindAction(num3Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::buildItem, 3);
-
+		EnhancedInputComponent->BindAction(num1Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::useItem, 0);
+		EnhancedInputComponent->BindAction(num2Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::useItem, 1);
+		EnhancedInputComponent->BindAction(num3Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::useItem, 2);
+		EnhancedInputComponent->BindAction(num4Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::useItem, 3);
+		EnhancedInputComponent->BindAction(num5Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::useItem, 4);
+		EnhancedInputComponent->BindAction(num6Button, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::useItem, 5);
 		EnhancedInputComponent->BindAction(mouseWheelUp, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::setCurBuildingPresetRot, true);
 		EnhancedInputComponent->BindAction(mouseWheelDown, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::setCurBuildingPresetRot, false);
+		EnhancedInputComponent->BindAction(QButton, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::shoot);
 
 		EnhancedInputComponent->BindAction(FButton, ETriggerEvent::Completed, this, &ATheLastStandPlayerController::collectItem);
 		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &ATheLastStandPlayerController::ZoomView);
@@ -176,6 +179,7 @@ void ATheLastStandPlayerController::OnESCClicked()
 	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showLayout(isOnInventoryLayout);
 	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showInventoryLayout(isOnInventoryLayout);
 	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showSynListLayout(isOnInventoryLayout);
+	//Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showPlayerStatusLayout(isOnInventoryLayout);
 }
 
 void ATheLastStandPlayerController::pickUp()
@@ -201,14 +205,38 @@ void ATheLastStandPlayerController::pickUp()
 
 void ATheLastStandPlayerController::useItem(int cur)
 {
-	FHitResult hit(ForceInit);
-	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
-	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->playerUseItem(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()), cur, GetPawn()->GetActorLocation(), hit.Location);
+	//if (true) 
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("%d"), cur);
 
-	FVector dir = hit.Location - GetPawn()->GetActorLocation();
-	dir.Normalize();
+	//	return;
+	//}
 
-	GetPawn()->SetActorRotation(dir.ToOrientationRotator());
+	if (Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->equippedItems[cur].id == -1)
+	{	
+		return;
+	}
+
+	if (Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->items[Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->equippedItems[cur].id].count <= 0)
+	{
+		return;
+	}
+
+	if (Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->equippedItems[cur].type == 1)
+	{
+		FHitResult hit(ForceInit);
+		GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
+		Cast<AMyGameStateBase>(GetWorld()->GetGameState())->playerUseItem(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()), Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->equippedItems[cur].id, GetPawn()->GetActorLocation(), hit.Location);
+
+		FVector dir = hit.Location - GetPawn()->GetActorLocation();
+		dir.Normalize();
+
+		GetPawn()->SetActorRotation(dir.ToOrientationRotator());
+	}
+	else if (Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->equippedItems[cur].type == 2)
+	{
+		buildItem(cur);
+	}
 }
 
 void ATheLastStandPlayerController::buildItem(int cur) 
@@ -220,7 +248,7 @@ void ATheLastStandPlayerController::buildItem(int cur)
 
 	FHitResult hit(ForceInit);
 	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
-	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->playerTryBuild(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()), cur, hit.Location);
+	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->playerTryBuild(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()), Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->equippedItems[cur].id, hit.Location);
 
 	Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding = true;
 }
@@ -282,5 +310,17 @@ void ATheLastStandPlayerController::ZoomView(const FInputActionValue& Value)
 	LastStandCharacter->CameraBoom->TargetArmLength = FMath::Clamp(armLength, 2500.0f, 20000.0f);//改成可控制最大和最小值
 	UE_LOG(LogTemp, Warning, TEXT("sha?: %f"), LastStandCharacter->CameraBoom->TargetArmLength);
 
+}
+
+void ATheLastStandPlayerController::shoot() 
+{
+	FHitResult hit(ForceInit);
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, hit);
+	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->shootAtPos(Cast<AMyPlayerState>(GetPawn()->GetPlayerState()), hit.Location);
+
+	FVector dir = hit.Location - GetPawn()->GetActorLocation();
+	dir.Normalize();
+
+	GetPawn()->SetActorRotation(dir.ToOrientationRotator());
 }
 

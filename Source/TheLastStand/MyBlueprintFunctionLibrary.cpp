@@ -9,6 +9,8 @@ FItem UMyBlueprintFunctionLibrary::itemInit(int id, int count)
 	cur.id = id;
 	cur.name = getItemName(id);
 	cur.count = count;
+	cur.type = getItemType(id);
+	cur.url = "/Script/Engine.Texture2D'/Game/Mat/Items/" + FString::FromInt(id) + "." + FString::FromInt(id) + "'";
 
 	return cur;
 }
@@ -43,10 +45,10 @@ FString UMyBlueprintFunctionLibrary::getItemName(int id)
 	{
 		return "Trap wood";
 	}
-	else if (id == 7)
-	{
-		return "Iron pickaxe";
-	}
+	//else if (id == 7)
+	//{
+	//	return "Iron pickaxe";
+	//}
 	else if (id == 8)
 	{
 		return "Mineral";
@@ -55,21 +57,17 @@ FString UMyBlueprintFunctionLibrary::getItemName(int id)
 	{
 		return "Iron";
 	}
-	else if (id == 10)
-	{
-		return "Hand gun";
-	}
+	//else if (id == 10)
+	//{
+	//	return "Hand gun";
+	//}
 	else if (id == 11)
 	{
-		return "No man flyer";
+		return "Drone";
 	}
 	else if (id == 12)
 	{
 		return "Cloth";
-	}
-	else if (id == 23)
-	{
-		return "Water";
 	}
 	else if (id == 13)
 	{
@@ -77,19 +75,19 @@ FString UMyBlueprintFunctionLibrary::getItemName(int id)
 	}
 	else if (id == 14)
 	{
-		return "Throw rock machine";
+		return "Rock machine";
 	}
 	else if (id == 15)
 	{
-		return "Auto throw rock machine";
+		return "Auto-Rock machine";
 	}
 	else if (id == 16)
 	{
-		return "Fire rock for rock machine";
+		return "Fire rock";
 	}
 	else if (id == 17)
 	{
-		return "Big rock for rock machine";
+		return "Big rock";
 	}
 	else if (id == 18)
 	{
@@ -97,19 +95,19 @@ FString UMyBlueprintFunctionLibrary::getItemName(int id)
 	}
 	else if (id == 19)
 	{
-		return "Bomb";
+		return "Granade";
 	}
 	else if (id == 20)
 	{
-		return "Poison bomb";
+		return "NAPALM";
 	}
 	else if (id == 21)
 	{
-		return "Fence";
+		return "Wall";
 	}
 	else if (id == 22)
 	{
-		return "Back-Fierce";
+		return "Barb";
 	}
 	else if (id == 23)
 	{
@@ -117,6 +115,36 @@ FString UMyBlueprintFunctionLibrary::getItemName(int id)
 	}
 
 	return "unknowed item";
+}
+
+int UMyBlueprintFunctionLibrary::getItemType(int id)
+{
+	if (id == 0)return 0;
+	if (id == 1)return 0;
+	if (id == 2)return 0;
+	if (id == 3)return 0;
+	if (id == 4)return 0;
+	if (id == 5)return 0;
+	if (id == 6)return 0;
+	if (id == 7)return 0;
+	if (id == 8)return 0;
+	if (id == 9)return 0;
+	if (id == 10)return 0;
+	if (id == 11)return 1;
+	if (id == 12)return 0;
+	if (id == 23)return 0;
+	if (id == 13)return 2;
+	if (id == 14)return 2;
+	if (id == 15)return 2;
+	if (id == 16)return 0;
+	if (id == 17)return 0;
+	if (id == 18)return 0;
+	if (id == 19)return 1;
+	if (id == 20)return 1;
+	if (id == 21)return 2;
+	if (id == 22)return 2;
+
+	return -1;
 }
 
 UTexture2D* UMyBlueprintFunctionLibrary::loadTexture(const FString& path)

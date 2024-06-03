@@ -22,6 +22,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static FString getItemName(int id);
 
+	//0: mat 1: use 2:building
+	UFUNCTION(BlueprintCallable)
+	static int getItemType(int id);
+
 	UFUNCTION(BlueprintCallable)
 	static UTexture2D* loadTexture(const FString& path);
+
 };
