@@ -21,6 +21,9 @@ public:
 	TArray<FItem> items;
 
 	UPROPERTY(BlueprintReadWrite)
+	TArray<FItem> equippedItems;
+
+	UPROPERTY(BlueprintReadWrite)
 	UMyUserWidget* layout;
 
 public:
@@ -42,4 +45,11 @@ public:
 	TArray<AActor*> collectableObjects;
 
 	void receiveItems(TArray<FItem> dropItems);
+
+	UFUNCTION(BlueprintCallable)
+	int getEquippedItemLength();
+	UFUNCTION(BlueprintCallable)
+	void equipItem(int slotIndex, int itemID);
+	UFUNCTION(BlueprintCallable)
+	void unequipItem(int slotIndex);
 };

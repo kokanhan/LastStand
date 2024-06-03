@@ -67,12 +67,28 @@ void AProjectile::activeProjectile(int curType, FVector StartLocation, FVector T
 
 void AProjectile::castExplosionEffect()
 {
-    if (type == 1) 
-    {
-        TSubclassOf<ADamageZone> zone = LoadClass<ADamageZone>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_RockExplosion.BP_RockExplosion_C'"));
-        ADamageZone* cur = GetWorld()->SpawnActor<ADamageZone>(zone, TargetPosition, FRotator(), FActorSpawnParameters());
+    //if (type == 1) 
+    //{
+    //    TSubclassOf<ADamageZone> zone = LoadClass<ADamageZone>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_RockExplosion.BP_RockExplosion_C'"));
+    //    ADamageZone* cur = GetWorld()->SpawnActor<ADamageZone>(zone, TargetPosition, FRotator(), FActorSpawnParameters());
+    //}
 
-        UE_LOG(LogTemp, Warning, TEXT("run"));
+    if (type == 11)
+    {
+        TSubclassOf<ADamageZone> zone = LoadClass<ADamageZone>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_DroneEnd.BP_DroneEnd_C'"));
+        ADamageZone* cur = GetWorld()->SpawnActor<ADamageZone>(zone, TargetPosition, FRotator(), FActorSpawnParameters());
+    }
+
+    if (type == 19)
+    {
+        TSubclassOf<ADamageZone> zone = LoadClass<ADamageZone>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_BombExplosion.BP_BombExplosion_C'"));
+        ADamageZone* cur = GetWorld()->SpawnActor<ADamageZone>(zone, TargetPosition, FRotator(), FActorSpawnParameters());
+    }
+
+    if (type == 16 || type == 20)
+    {
+        TSubclassOf<ADamageZone> zone = LoadClass<ADamageZone>(nullptr, TEXT("Blueprint'/Game/TopDown/Blueprints/BP_FlameBurning.BP_FlameBurning_C'"));
+        ADamageZone* cur = GetWorld()->SpawnActor<ADamageZone>(zone, TargetPosition, FRotator(), FActorSpawnParameters());
     }
 }
 

@@ -7,12 +7,30 @@
 
 void AMyPlayerState::initItemList() 
 {
+	TArray<int32> ids = { 0, 1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13, 14, 15, 18, 19, 20, 21, 22, 23 };
+
+
 	AMyGameStateBase* gameState = GetWorld()->GetGameState<AMyGameStateBase>();
 
 	for (int i = 0; i < gameState->itemTypeCount; i += 1)
 	{
-		items.Add(UMyBlueprintFunctionLibrary::itemInit(i, 20));
+		if (ids.Contains(i))
+		{
+			items.Add(UMyBlueprintFunctionLibrary::itemInit(i, 3));
+		}
+		else 
+		{
+			items.Add(UMyBlueprintFunctionLibrary::itemInit(i, 0));
+		}
 	}
+	
+	equippedItems.Add(UMyBlueprintFunctionLibrary::itemInit(-1));
+	equippedItems.Add(UMyBlueprintFunctionLibrary::itemInit(-1));
+	equippedItems.Add(UMyBlueprintFunctionLibrary::itemInit(-1));
+	equippedItems.Add(UMyBlueprintFunctionLibrary::itemInit(-1));
+	equippedItems.Add(UMyBlueprintFunctionLibrary::itemInit(-1));
+	equippedItems.Add(UMyBlueprintFunctionLibrary::itemInit(-1));
+
 }
 
 int AMyPlayerState::getSynListCount()
@@ -42,7 +60,7 @@ bool AMyPlayerState::synthesisItem(int id)
 		items[list[i].id].count -= list[i].count;
 	}
 
-	items[list[0].id].count += 1;
+	items[list[0].id].count += list[0].count;
 
 	return true;
 }
@@ -68,4 +86,31 @@ void AMyPlayerState::receiveItems(TArray<FItem> dropItems)
 	{
 		items[dropItems[i].id].count += dropItems[i].count;
 	}
+}
+
+void AMyPlayerState::equipItem(int slotIndex, int itemID) 
+{
+	if (slotIndex < 6  && (items[itemID].type == 1 || items[itemID].type == 2))
+	{
+		equippedItems[slotIndex] = items[itemID];
+		layout->setEquipItemURL(slotIndex, items[itemID].url);//
+	}
+}
+
+void AMyPlayerState::unequipItem(int slotIndex)
+{
+	equippedItems[slotIndex] = UMyBlueprintFunctionLibrary::itemInit(-1);
+}
+
+int AMyPlayerState::getEquippedItemLength()
+{
+	for (int i = 0; i < 6; i += 1) 
+	{
+		if (equippedItems[i].id == -1 || items[equippedItems[i].id].count == 0)
+		{
+			return i;
+		}
+	}
+	
+	return 6;
 }

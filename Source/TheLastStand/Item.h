@@ -12,7 +12,9 @@ struct FItem
 	UPROPERTY(BlueprintReadOnly)
 	FString name;
 	UPROPERTY(BlueprintReadOnly)
-	FString type;
+	int type;
 	UPROPERTY(BlueprintReadOnly)
 	int count;
+	UPROPERTY(BlueprintReadOnly)
+	FString url;
 };

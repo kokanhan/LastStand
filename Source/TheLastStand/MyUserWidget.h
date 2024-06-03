@@ -35,4 +35,12 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void pumpHintText(const FVector& screenPos, const FString& text);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void giveUpEquip();
+	UFUNCTION(BlueprintImplementableEvent)
+	void movingEquippingImage(const FVector& movingDis);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void setEquipItemURL(int32 slotIndex, const FString& text);
 };
