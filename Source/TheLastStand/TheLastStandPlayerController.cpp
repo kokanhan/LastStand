@@ -361,14 +361,14 @@ void ATheLastStandPlayerController::Tick(float DeltaTime)
 		// todo: set max val for Y and X 
 	
 		LastStandCharacter->CameraBoom->TargetOffset.X += CameraOffset.X * viewMapSpeed;
-		LastStandCharacter->CameraBoom->TargetOffset.X = FMath::Clamp(LastStandCharacter->CameraBoom->TargetOffset.X , -1*(32000- abs(GetPawn()->GetActorLocation().X)), 32000 - abs(GetPawn()->GetActorLocation().X));
+		LastStandCharacter->CameraBoom->TargetOffset.X = FMath::Clamp(LastStandCharacter->CameraBoom->TargetOffset.X , -1*(32000 + GetPawn()->GetActorLocation().X), 32000 - GetPawn()->GetActorLocation().X);
 		
 		float screenRatio = ScreenResult.X / ScreenResult.Y;
 		LastStandCharacter->CameraBoom->TargetOffset.Y += CameraOffset.Y * viewMapSpeed* screenRatio;
 		// island y axis is not up-down symmetry, so it needs to be set diff min max values
-		LastStandCharacter->CameraBoom->TargetOffset.Y = FMath::Clamp(LastStandCharacter->CameraBoom->TargetOffset.Y, -1 * (28000 - abs(GetPawn()->GetActorLocation().Y)), 56000 - abs(GetPawn()->GetActorLocation().Y));
+		LastStandCharacter->CameraBoom->TargetOffset.Y = FMath::Clamp(LastStandCharacter->CameraBoom->TargetOffset.Y, -1 * (32000 + GetPawn()->GetActorLocation().Y), 32000 - GetPawn()->GetActorLocation().Y);
 		if (GEngine) {
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("should x:%f "), 64000 - abs(GetPawn()->GetActorLocation().X)));
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("should max:%f , min:%f"), 32000 - abs(GetPawn()->GetActorLocation().X), - 1 * (32000 - abs(GetPawn()->GetActorLocation().X))));
 			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, FString::Printf(TEXT("x:%f y:%f"), GetPawn()->GetActorLocation().X, GetPawn()->GetActorLocation().Y));
 			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT(" offset x:%f y:%f"), LastStandCharacter->CameraBoom->TargetOffset.X, LastStandCharacter->CameraBoom->TargetOffset.Y));
 		}
