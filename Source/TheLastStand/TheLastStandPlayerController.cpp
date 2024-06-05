@@ -97,7 +97,8 @@ void ATheLastStandPlayerController::OnInputStarted()
 
 // Triggered every frame when the input is held down
 void ATheLastStandPlayerController::OnSetDestinationTriggered()
-{
+{	
+
 	if (Cast<ATheLastStandCharacter>(GetPawn())->isPlacingBuilding)
 	{
 		return;
@@ -187,7 +188,6 @@ void ATheLastStandPlayerController::OnESCClicked()
 	isOnInventoryLayout = !isOnInventoryLayout;
 	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showLayout(isOnInventoryLayout);
 	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showInventoryLayout(isOnInventoryLayout);
-	//Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showSynListLayout(isOnInventoryLayout);
 	Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->layout->showPlayerStatusLayout(isOnInventoryLayout);
 }
 
@@ -214,12 +214,6 @@ void ATheLastStandPlayerController::pickUp()
 
 void ATheLastStandPlayerController::useItem(int cur)
 {
-	//if (true) 
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("%d"), cur);
-
-	//	return;
-	//}
 
 	if (Cast<AMyPlayerState>(GetPawn()->GetPlayerState())->equippedItems[cur].id == -1)
 	{	
@@ -361,32 +355,40 @@ void ATheLastStandPlayerController::Tick(float DeltaTime)
 	if (startViewing == true)
 	{
 		LastStandCharacter = Cast<ATheLastStandCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
-		UE_LOG(LogTemp, Warning, TEXT("zenmele"));
-		if (mouse_coordinates.X < (0.3*ScreenResult.X)) {
-			gogo.X = -1 * (ScreenResult.X - mouse_coordinates.X);
-		}
-		if (mouse_coordinates.X >= (1.7*ScreenResult.X)) {
-			gogo.X = 1 * mouse_coordinates.X;
-		}
-		if (mouse_coordinates.Y < (0.7*ScreenResult.Y)) {
-			gogo.Y = -1 * (ScreenResult.Y - mouse_coordinates.Y);
-		}
-		if (mouse_coordinates.Y >= (ScreenResult.Y*1.7)) {
-			gogo.Y = 1 * (mouse_coordinates.Y);
-		}
-		if (mouse_coordinates.X > (0.3 * ScreenResult.X)  && mouse_coordinates.X < (1.7 * ScreenResult.X)) {
-			gogo.X = 0;
-		}
 
-		if (mouse_coordinates.Y > (0.7 * ScreenResult.Y) && mouse_coordinates.Y < (1.7 * ScreenResult.Y)) {
-			gogo.Y = 0;
+		CameraOffset.X = DetectMousePos(mouse_coordinates.X, ScreenResult.X, CameraOffset.X);
+		CameraOffset.Y = DetectMousePos(mouse_coordinates.Y, ScreenResult.Y, CameraOffset.Y);
+		// todo: set max val for Y and X 
+	
+		LastStandCharacter->CameraBoom->TargetOffset.X += CameraOffset.X * viewMapSpeed;
+		LastStandCharacter->CameraBoom->TargetOffset.X = FMath::Clamp(LastStandCharacter->CameraBoom->TargetOffset.X , -1*(32000- abs(GetPawn()->GetActorLocation().X)), 32000 - abs(GetPawn()->GetActorLocation().X));
+		
+		float screenRatio = ScreenResult.X / ScreenResult.Y;
+		LastStandCharacter->CameraBoom->TargetOffset.Y += CameraOffset.Y * viewMapSpeed* screenRatio;
+		// island y axis is not up-down symmetry, so it needs to be set diff min max values
+		LastStandCharacter->CameraBoom->TargetOffset.Y = FMath::Clamp(LastStandCharacter->CameraBoom->TargetOffset.Y, -1 * (28000 - abs(GetPawn()->GetActorLocation().Y)), 56000 - abs(GetPawn()->GetActorLocation().Y));
+		if (GEngine) {
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("should x:%f "), 64000 - abs(GetPawn()->GetActorLocation().X)));
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, FString::Printf(TEXT("x:%f y:%f"), GetPawn()->GetActorLocation().X, GetPawn()->GetActorLocation().Y));
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::Printf(TEXT(" offset x:%f y:%f"), LastStandCharacter->CameraBoom->TargetOffset.X, LastStandCharacter->CameraBoom->TargetOffset.Y));
 		}
-
-		LastStandCharacter->CameraBoom->TargetOffset.X += gogo.X * viewMapSpeed;
-		LastStandCharacter->CameraBoom->TargetOffset.Y += gogo.Y * viewMapSpeed;
 	}
+	
 }
+float ATheLastStandPlayerController::DetectMousePos(float axisValue, float screenAxisVal, float offsetValue)
+{
+	if (axisValue < (0.3 * screenAxisVal)) {
+		offsetValue = -1 * (screenAxisVal*2 - axisValue);
+	}
+	else if (axisValue >= (1.7 * screenAxisVal)) {
+		offsetValue = 1 * axisValue;
+	}
+	else {
+		offsetValue = 0;
+	}
 
+	return offsetValue;
+}
 
 
 void ATheLastStandPlayerController::shoot() 

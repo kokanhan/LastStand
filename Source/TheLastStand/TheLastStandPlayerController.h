@@ -83,7 +83,7 @@ public:
 	UInputAction* ViewAction;
 
 	UPROPERTY(EditAnywhere, Category = "View Map")
-	float viewMapSpeed = 0.5f;
+	float viewMapSpeed = 0.1f;
 
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
@@ -120,7 +120,7 @@ private:
 	FVector2D mouse_coordinates;
 	ATheLastStandCharacter* LastStandCharacter;
 	FVector2D ScreenResult;
-	FVector2D gogo;
+	FVector2D CameraOffset;
 	
 
 public:
@@ -130,6 +130,7 @@ public:
 	void setCurBuildingPresetPos();
 	void setCurBuildingPresetRot(bool isUp);
 	virtual void Tick(float DeltaTime) override;
+	float DetectMousePos(float axisValue, float screenAxisVal, float offsetValue);
 
 	
 };
