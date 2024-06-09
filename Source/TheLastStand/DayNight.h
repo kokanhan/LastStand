@@ -34,6 +34,8 @@ public:
 	ADirectionalLight* LightSource;
 	UPROPERTY(EditAnywhere, Category = "Sky")
 	float TurnRate;
+	UPROPERTY(EditAnywhere, Category = "Sky")
+	AActor* MoonLight;
 
 	FTimerHandle MemberTimerHandle;
 	bool IsNight;

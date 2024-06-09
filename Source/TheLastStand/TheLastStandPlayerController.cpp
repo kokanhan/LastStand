@@ -365,7 +365,7 @@ void ATheLastStandPlayerController::Tick(float DeltaTime)
 		
 		float screenRatio = ScreenResult.X / ScreenResult.Y;
 		LastStandCharacter->CameraBoom->TargetOffset.Y += CameraOffset.Y * viewMapSpeed* screenRatio;
-		// island y axis is not up-down symmetry, so it needs to be set diff min max values
+		
 		LastStandCharacter->CameraBoom->TargetOffset.Y = FMath::Clamp(LastStandCharacter->CameraBoom->TargetOffset.Y, -1 * (32000 + GetPawn()->GetActorLocation().Y), 32000 - GetPawn()->GetActorLocation().Y);
 		if (GEngine) {
 			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Yellow, FString::Printf(TEXT("should max:%f , min:%f"), 32000 - abs(GetPawn()->GetActorLocation().X), - 1 * (32000 - abs(GetPawn()->GetActorLocation().X))));
